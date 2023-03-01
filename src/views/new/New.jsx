@@ -61,10 +61,14 @@ const NewBlogPost = (props) => {
       }
 
       console.log(content)
+      console.log(JSON.stringify(content))
       
       const res = await fetch("http://localhost:3420/blogposts", {
         method: "POST",
-        body: JSON.stringify(content)
+        body: JSON.stringify(content),
+        headers: new Headers({
+          "Content-Type": "application/json"
+        })
       })
 
       if (res.ok) {
