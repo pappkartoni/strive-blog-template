@@ -11,8 +11,8 @@ const Blog = (props) => {
   const params = useParams();
   const navigate = useNavigate();
   useEffect(() => {
-    const { id } = params;
-    const blog = posts.find((post) => post._id.toString() === id);
+    const { uuid } = params;
+    const blog = posts.find((post) => post.uuid.toString() === uuid);
 
     if (blog) {
       setBlog(blog);

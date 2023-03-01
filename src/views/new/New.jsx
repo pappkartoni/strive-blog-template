@@ -4,26 +4,88 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
+
 const NewBlogPost = (props) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+
+  const [title, setTitle] = useState("")
+  const [category, setCategory] = useState("Category1")
+  const [author, setAuthor] = useState({})
   const [html, setHTML] = useState(null);
+
+  const navigate = useNavigate()
+
+  const getAuthor = async () => {
+    try {
+      const res = await fetch("http://localhost:3420/authors/88397151-110a-4a5f-b3e7-de19be4e0629")
+
+      if (res.ok) {
+        const authorRes = await res.json()
+        setAuthor(authorRes)
+        console.log(authorRes)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     let html = convertToHTML(editorState.getCurrentContent());
     setHTML(html);
-  }, [editorState]);
+  }, [editorState]);  
+
+  useEffect(() => {
+    getAuthor()
+  },[])
+
+  const submitForm = async (e) => {
+    e.preventDefault()
+    try {
+      const content = {
+        category: category,
+        title: title,
+        cover: author.avatar,
+        readTime: {
+          value: 5,
+          unit: "minute"
+        },
+        author: {
+          name: author.name + " " + author.surname,
+          avatar: author.avatar
+        },
+        content: html
+      }
+
+      console.log(content)
+      
+      const res = await fetch("http://localhost:3420/blogposts", {
+        method: "POST",
+        body: JSON.stringify(content)
+      })
+
+      if (res.ok) {
+        const data = res.json()
+        console.log(data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <Container className="new-blog-container">
-      <Form className="mt-5">
+      <Form className="mt-5" onSubmit={submitForm}>
         <Form.Group controlId="blog-form" className="mt-3">
           <Form.Label>Title</Form.Label>
-          <Form.Control size="lg" placeholder="Title" />
+          <Form.Control size="lg" placeholder="Title" onChange={e => setTitle(e.target.value)}/>
         </Form.Group>
         <Form.Group controlId="blog-category" className="mt-3">
           <Form.Label>Category</Form.Label>
-          <Form.Control size="lg" as="select">
+          <Form.Control size="lg" as="select" onChange={e => setCategory(e.target.value)}>
             <option>Category1</option>
             <option>Category2</option>
             <option>Category3</option>
