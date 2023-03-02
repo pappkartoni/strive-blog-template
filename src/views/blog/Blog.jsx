@@ -1,25 +1,64 @@
 import React, { useEffect, useState } from "react";
-import { Container, Image } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Button, Container, Image, Modal } from "react-bootstrap";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BlogAuthor from "../../components/blog/blog-author/BlogAuthor";
 import BlogLike from "../../components/likes/BlogLike";
-import posts from "../../data/posts.json";
+import BlogComment from "./BlogComment";
+import NewBlogComment from "./NewBlogComment";
 import "./styles.css";
+
 const Blog = (props) => {
   const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation()
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [image, setImage] = useState(null);
+  console.log(params)
+
+  const getBlogpost = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3420/blogposts/${id}`)
+      if (res.ok) {
+        const data = await res.json()
+        setBlog(data)
+        setLoading(false)
+        console.log(blog)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const postImage = async (image) => {
+    
+    const formData = new FormData();
+    formData.append("cover", image);
+    try {
+      let res = await fetch(
+        `http://localhost:3420/blogposts/${params.uuid}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      if (res.ok) {
+        console.log("Image Uploaded Successfully");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    postImage(image)
+  } 
   useEffect(() => {
     const { uuid } = params;
-    const blog = posts.find((post) => post.uuid.toString() === uuid);
-
-    if (blog) {
-      setBlog(blog);
-      setLoading(false);
-    } else {
-      navigate("/404");
-    }
+    getBlogpost(uuid)
   }, []);
 
   if (loading) {
@@ -29,6 +68,22 @@ const Blog = (props) => {
       <div className="blog-details-root">
         <Container>
           <Image className="blog-details-cover" src={blog.cover} fluid />
+          <form onSubmit={handleSubmit}>
+            <input
+              type="file"
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+              }}
+            />
+            <Button
+              className="mt-2"
+              variant="primary"
+              onClick={handleClose}
+              type="submit"
+            >
+              Post Image
+            </Button>
+          </form>
           <h1 className="blog-details-title">{blog.title}</h1>
 
           <div className="blog-details-container">
@@ -53,6 +108,10 @@ const Blog = (props) => {
               __html: blog.content,
             }}
           ></div>
+          {blog.comments && blog.comments.map(c => 
+            <BlogComment key={c.uuid} {...c} />
+          )}
+          <NewBlogComment id={params.uuid}/>
         </Container>
       </div>
     );

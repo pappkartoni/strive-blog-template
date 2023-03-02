@@ -57,7 +57,8 @@ const NewBlogPost = (props) => {
           name: author.name + " " + author.surname,
           avatar: author.avatar
         },
-        content: html
+        content: html,
+        comments: []
       }
 
       console.log(content)
@@ -74,6 +75,7 @@ const NewBlogPost = (props) => {
       if (res.ok) {
         const data = res.json()
         console.log(data)
+        navigate("/")
       }
     } catch (error) {
       console.log(error)
