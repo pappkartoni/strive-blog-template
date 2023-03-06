@@ -21,7 +21,8 @@ const Blog = (props) => {
 
   const getBlogpost = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3420/blogposts/${id}`)
+      const apiUrl = process.env.REACT_APP_BE_DEV_URL
+      const res = await fetch(`${apiUrl}/blogposts/${id}`)
       if (res.ok) {
         const data = await res.json()
         setBlog(data)
@@ -37,8 +38,9 @@ const Blog = (props) => {
     const formData = new FormData();
     formData.append("cover", image);
     try {
+      const apiUrl = process.env.REACT_APP_BE_DEV_URL
       let res = await fetch(
-        `http://localhost:3420/blogposts/${params.uuid}/upload`,
+        `${apiUrl}/blogposts/${params.uuid}/upload`,
         {
           method: "POST",
           body: formData,

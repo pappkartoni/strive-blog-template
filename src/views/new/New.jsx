@@ -21,7 +21,8 @@ const NewBlogPost = (props) => {
 
   const getAuthor = async () => {
     try {
-      const res = await fetch("http://localhost:3420/authors/88397151-110a-4a5f-b3e7-de19be4e0629")
+      const apiUrl = process.env.REACT_APP_BE_DEV_URL
+      const res = await fetch(`${apiUrl}/authors/88397151-110a-4a5f-b3e7-de19be4e0629`)
 
       if (res.ok) {
         const authorRes = await res.json()

@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import posts from "../../../data/posts.json";
 import BlogItem from "../blog-item/BlogItem";
 
 const BlogList = (props) => {
@@ -10,7 +9,8 @@ const BlogList = (props) => {
 
   const getAllBlogPosts = async () => {
     try {
-      const res = await fetch("http://localhost:3420/blogposts")
+      const apiUrl = process.env.REACT_APP_BE_DEV_URL
+      const res = await fetch(`${apiUrl}/blogposts`)
       if (res.ok) {
         const data = await res.json()
         setAllPosts(data)
