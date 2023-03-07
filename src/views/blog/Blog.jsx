@@ -54,6 +54,20 @@ const Blog = (props) => {
     }
   };
 
+  const downloadPDF = async () => {
+    try {
+      const apiUrl = process.env.REACT_APP_BE_DEV_URL
+      let res = await fetch(`${apiUrl}/blogposts/${params.uuid}/pdf`)
+      console.log(res)
+
+      if (res.ok) {
+        window.location = (res.url)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     postImage(image)
@@ -110,6 +124,16 @@ const Blog = (props) => {
               __html: blog.content,
             }}
           ></div>
+          <div>
+            <Button
+              className="mt-2"
+              variant="primary"
+              onClick={downloadPDF}
+              type="button"
+              >
+                DOWNLOAD
+              </Button>
+          </div>
           {blog.comments && blog.comments.map(c => 
             <BlogComment key={c.uuid} {...c} />
           )}
