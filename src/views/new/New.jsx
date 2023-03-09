@@ -56,7 +56,8 @@ const NewBlogPost = (props) => {
         },
         author: {
           name: author.name + " " + author.surname,
-          avatar: author.avatar
+          avatar: author.avatar,
+          email: author.email
         },
         content: html,
         comments: []
