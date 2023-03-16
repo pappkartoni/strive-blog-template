@@ -40,7 +40,7 @@ const Blog = (props) => {
     try {
       const apiUrl = process.env.REACT_APP_BE_DEV_URL
       let res = await fetch(
-        `${apiUrl}/blogposts/${params.uuid}/upload`,
+        `${apiUrl}/blogposts/${params.id}/upload`,
         {
           method: "POST",
           body: formData,
@@ -57,7 +57,7 @@ const Blog = (props) => {
   const downloadPDF = async () => {
     try {
       const apiUrl = process.env.REACT_APP_BE_DEV_URL
-      let res = await fetch(`${apiUrl}/blogposts/${params.uuid}/pdf`)
+      let res = await fetch(`${apiUrl}/blogposts/${params.id}/pdf`)
       console.log(res)
 
       if (res.ok) {
@@ -73,8 +73,8 @@ const Blog = (props) => {
     postImage(image)
   } 
   useEffect(() => {
-    const { uuid } = params;
-    getBlogpost(uuid)
+    const { id } = params;
+    getBlogpost(id)
   }, []);
 
   if (loading) {
@@ -135,9 +135,9 @@ const Blog = (props) => {
               </Button>
           </div>
           {blog.comments && blog.comments.map(c => 
-            <BlogComment key={c.uuid} {...c} />
+            <BlogComment key={c._id} {...c} />
           )}
-          <NewBlogComment id={params.uuid}/>
+          <NewBlogComment id={params.id}/>
         </Container>
       </div>
     );

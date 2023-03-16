@@ -13,7 +13,7 @@ const BlogList = (props) => {
       const res = await fetch(`${apiUrl}/blogposts`)
       if (res.ok) {
         const data = await res.json()
-        setAllPosts(data)
+        setAllPosts(data.blogposts)
       }
     } catch (error) {
       console.log(error)
@@ -29,7 +29,7 @@ const BlogList = (props) => {
       {allPosts.reverse().map((post) => (
         <Col
           md={4}
-          key={post.uuid}
+          key={post._id}
           style={{
             marginBottom: 50,
           }}
