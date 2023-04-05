@@ -22,7 +22,9 @@ const Blog = (props) => {
   const getBlogpost = async (id) => {
     try {
       const apiUrl = process.env.REACT_APP_BE_DEV_URL
-      const res = await fetch(`${apiUrl}/blogposts/${id}`)
+      const res = await fetch(`${apiUrl}/blogposts/${id}`, {
+        headers: {Authorization: `Bearer ${window.localStorage.getItem("token")}`}
+      })
       if (res.ok) {
         const data = await res.json()
         setBlog(data)
@@ -104,7 +106,7 @@ const Blog = (props) => {
 
           <div className="blog-details-container">
             <div className="blog-details-author">
-              <BlogAuthor {...blog.author} />
+              <BlogAuthor {...blog.author[0]} />
             </div>
             <div className="blog-details-info">
               <div>{blog.createdAt}</div>

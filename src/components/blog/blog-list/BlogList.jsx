@@ -10,10 +10,12 @@ const BlogList = (props) => {
   const getAllBlogPosts = async () => {
     try {
       const apiUrl = process.env.REACT_APP_BE_DEV_URL
-      const res = await fetch(`${apiUrl}/blogposts`)
+      const res = await fetch(`${apiUrl}/blogposts/me/stories`, {
+        headers: {Authorization: `Bearer ${window.localStorage.getItem("token")}`}
+      })
       if (res.ok) {
         const data = await res.json()
-        setAllPosts(data.blogposts)
+        setAllPosts(data)
       }
     } catch (error) {
       console.log(error)

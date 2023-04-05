@@ -6,10 +6,10 @@ const NavBar = (props) => {
   return (
       <Navbar expand="lg" className="blog-navbar" fixed="top">
         <Container className="justify-content-between">
-          <Navbar.Brand as={Link} to="/">
+          <Navbar.Brand as={Link} to="/home">
             <img className="blog-navbar-brand" alt="logo" src="logo.svg" />
           </Navbar.Brand>
-          <Button
+          {window.localStorage.getItem("token") && <div><Button
             as={Link}
             to="/new"
             className="blog-navbar-add-button bg-dark"
@@ -27,6 +27,7 @@ const NavBar = (props) => {
             </svg>
             Post Article
           </Button>
+          <Button as={Link} to="/" onClick={() => window.localStorage.clear()}>Log out</Button></div>}
         </Container>
       </Navbar>
   );
