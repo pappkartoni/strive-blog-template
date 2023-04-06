@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Modal, Navbar } from "react-bootstrap";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import "./styles.css";
 const NavBar = (props) => {
+  const navigate = useNavigate()
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem("token") !== null)
+
+  useEffect(() => {
+    setLoggedIn(localStorage.getItem("token") !== null)
+    console.log(loggedIn)
+  }, [navigate])
   return (
       <Navbar expand="lg" className="blog-navbar" fixed="top">
         <Container className="justify-content-between">
           <Navbar.Brand as={Link} to="/home">
             <img className="blog-navbar-brand" alt="logo" src="logo.svg" />
           </Navbar.Brand>
-          {window.localStorage.getItem("token") && <div><Button
+          {loggedIn && <div><Button
             as={Link}
             to="/new"
             className="blog-navbar-add-button bg-dark"
